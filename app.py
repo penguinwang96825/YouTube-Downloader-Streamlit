@@ -19,7 +19,7 @@ def get_youtube_video_info(url):
     info_df['acodec'] = info_df['acodec'].apply(
         lambda x: 'X' if x=='video only' else 'O'
     )
-    info_df['vcodec'] = info_df['acodec'].apply(
+    info_df['vcodec'] = info_df['vcodec'].apply(
         lambda x: 'X' if x=='audio only' else 'O'
     )
     info_df['url'] = info_df['url'].apply(make_clickable)
