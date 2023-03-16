@@ -69,38 +69,7 @@ def main():
             info_df = get_youtube_video_info(url)
             info_df = info_df.to_html(escape=False)
             st.write(info_df, unsafe_allow_html=True)
-            # st.table(info_df)
-    elif page == "語音辨識":
-        uploaded_file = st.file_uploader("上傳語音檔", type=['wav', 'mp3', "m4a"])
-        model = whisper.load_model("base")
-
-        if uploaded_file is not None:
-            if uploaded_file.name.endswith('wav'):
-                audio = pydub.AudioSegment.from_wav(uploaded_file)
-                file_type = 'wav'
-            elif uploaded_file.name.endswith('mp3'):
-                audio = pydub.AudioSegment.from_mp3(uploaded_file)
-                file_type = 'mp3'
-            elif uploaded_file.name.endswith('m4a'):
-                audio = pydub.AudioSegment.from_file(uploaded_file, format='m4a')
-                file_type = 'mp4'
-
-            save_path = os.path.abspath(uploaded_file.name)
-            audio.export(save_path, format=file_type)
-
-            audio_bytes = open(save_path, 'rb').read()
-            st.audio(audio_bytes, format=f'audio/{file_type}', start_time=0)
-
-            result = model.transcribe(uploaded_file.name)
-            # st.write(result["text"])
-            for segment in result['segments']:
-                st.write(
-                    f'{time(segment["start"])}'
-                    f' --> '
-                    f'{time(segment["end"])} '
-                    f'{segment["text"][1:]}'
-                )
-
+            
 
 if __name__ == '__main__':
     main()
