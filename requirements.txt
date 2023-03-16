@@ -1,5 +1,3 @@
-openai-whisper
 pandas
-pydub
 streamlit
 yt-dlp

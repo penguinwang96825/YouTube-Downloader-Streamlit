@@ -1,6 +1,5 @@
 import os
 import yt_dlp
-import datetime
 import pandas as pd
 import streamlit as st
 
@@ -18,10 +17,10 @@ def get_youtube_video_info(url):
     info_df = info_df.replace({'acodec': 'none'}, 'video only')
     info_df = info_df.replace({'vcodec': 'none'}, 'audio only')
     info_df['acodec'] = info_df['acodec'].apply(
-        lambda x: 'X' if x=='video only' else 'O'
+        lambda x: '❌' if x=='video only' else '✔️'
     )
     info_df['vcodec'] = info_df['vcodec'].apply(
-        lambda x: 'X' if x=='audio only' else 'O'
+        lambda x: '❌' if x=='audio only' else '✔️'
     )
     info_df['url'] = info_df['url'].apply(make_clickable)
     info_df.columns = ['畫質', '檔名', '音訊', '影像', '網址']
@@ -42,10 +41,6 @@ def hide():
         </style>
     """
     st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
-
-
-def time(sec):
-    return datetime.timedelta(seconds=round(sec))
 
 
 def main():
