@@ -1,12 +1,8 @@
 import os
-import pydub
 import yt_dlp
-import whisper
 import datetime
 import pandas as pd
 import streamlit as st
-from pathlib import Path
-from tempfile import NamedTemporaryFile
 
 
 def get_youtube_video_info(url):
@@ -69,7 +65,7 @@ def main():
             info_df = get_youtube_video_info(url)
             info_df = info_df.to_html(escape=False)
             st.write(info_df, unsafe_allow_html=True)
-            
+
 
 if __name__ == '__main__':
     main()
