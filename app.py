@@ -50,7 +50,13 @@ def main():
         ("主頁", "YouTube下載器")
     )
     if page == "主頁":
-        st.title('主頁')
+        # st.title('主頁')
+        st.markdown(
+            f"# DONE\n"
+            f" - 提供網頁版下載YouTube影片\n"
+            f"# TODO\n"
+            f" - 影片Transcribe功能\n"
+        )
     elif page == "YouTube下載器":
         st.title('YouTube下載器')
         # https://www.youtube.com/watch?v=HQDDlgGy2hg
