@@ -16,7 +16,15 @@ def get_youtube_video_info(url):
     info_df = info_df.query('ext not in ["mhtml", "webm"]')
     info_df = info_df.replace({'acodec': 'none'}, 'video only')
     info_df = info_df.replace({'vcodec': 'none'}, 'audio only')
+    info_df['acodec'] = info_df['acodec'].apply(
+        lambda x: 'X' if x=='video only' else 'O'
+    )
+    info_df['vcodec'] = info_df['acodec'].apply(
+        lambda x: 'X' if x=='audio only' else 'O'
+    )
     info_df['url'] = info_df['url'].apply(make_clickable)
+    info_df.columns = ['畫質', '檔名', '音訊', '影像', '網址']
+    info_df = info_df.reset_index(drop=True)
     return info_df
 
 
