@@ -52,7 +52,7 @@ def main():
     hide()
     page = st.sidebar.selectbox(
         "功能頁",
-        ("主頁", "YouTube下載器", "語音辨識")
+        ("主頁", "YouTube下載器")
     )
     if page == "主頁":
         st.title('主頁')
