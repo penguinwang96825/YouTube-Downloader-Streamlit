@@ -1,72 +1,64 @@
+# -*- coding: utf-8 -*-
+"""
+Entrypoint file
+
+Authors
+ * Yang Wang 2023
+"""
 import os
-import yt_dlp
-import pandas as pd
 import streamlit as st
 
+from src.downloader import get_youtube_video_info
+from src.utils import hide_footer
 
-def get_youtube_video_info(url):
-    os.system(f'yt-dlp --list-formats {url}')
-    ydl_opts = {}
-    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-        info = ydl.extract_info(url, download=False)
-        info_df = pd.DataFrame(info['formats'])
-    info_df = info_df[
-        ['format_note', 'ext', 'acodec', 'vcodec', 'url']
-    ]
-    info_df = info_df.query('ext not in ["mhtml", "webm"]')
-    info_df = info_df.replace({'acodec': 'none'}, 'video only')
-    info_df = info_df.replace({'vcodec': 'none'}, 'audio only')
-    info_df['acodec'] = info_df['acodec'].apply(
-        lambda x: '❌' if x=='video only' else '✔️'
+
+def page_introduction():
+    st.markdown(
+        f"# DONE\n"
+        f" - 提供網頁版下載YouTube影片\n"
+        f"# TODO\n"
+        f" - 影片Transcribe功能\n"
     )
-    info_df['vcodec'] = info_df['vcodec'].apply(
-        lambda x: '❌' if x=='audio only' else '✔️'
+
+
+def page_youtube_downloader():
+    st.title('YouTube下載器')
+    options = {}
+    options['ext'] = st.sidebar.multiselect(
+        '檔名',
+        ['3gp', 'm4a', 'mp4'], 
+        ['3gp', 'm4a', 'mp4']
     )
-    info_df['url'] = info_df['url'].apply(make_clickable)
-    info_df.columns = ['畫質', '檔名', '音訊', '影像', '網址']
-    info_df = info_df.reset_index(drop=True)
-    return info_df
+    # https://www.youtube.com/watch?v=HQDDlgGy2hg
+    url = st.text_input(label='請輸入網址: ')
+
+    if url:
+        info_df = get_youtube_video_info(url, options)
+        info_df = info_df.to_html(escape=False)
+        st.write(info_df, unsafe_allow_html=True)
 
 
-def make_clickable(link):
-    text = link.split('=')[1]
-    return f'<a target="_blank" href="{link}">link</a>'
-
-
-def hide():
-    hide_streamlit_style = """
-        <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-        </style>
-    """
-    st.markdown(hide_streamlit_style, unsafe_allow_html=True) 
+def page_audio_summariser():
+    st.title('語音摘要器')
 
 
 def main():
-    hide()
     page = st.sidebar.selectbox(
-        "功能頁",
-        ("主頁", "YouTube下載器")
+        "功能選單",
+        ("介紹", "YouTube下載器", '語音摘要器 (TBD)')
     )
-    if page == "主頁":
-        # st.title('主頁')
-        st.markdown(
-            f"# DONE\n"
-            f" - 提供網頁版下載YouTube影片\n"
-            f"# TODO\n"
-            f" - 影片Transcribe功能\n"
-        )
+    if page == "介紹":
+        page_introduction()
     elif page == "YouTube下載器":
-        st.title('YouTube下載器')
-        # https://www.youtube.com/watch?v=HQDDlgGy2hg
-        url = st.text_input(label='請輸入網址: ')
-
-        if url:
-            info_df = get_youtube_video_info(url)
-            info_df = info_df.to_html(escape=False)
-            st.write(info_df, unsafe_allow_html=True)
+        page_youtube_downloader()
+    elif page == "語音摘要器 (TBD)":
+        page_audio_summariser()
 
 
 if __name__ == '__main__':
+    st.set_page_config(
+        page_title="Side Project",
+        # page_icon="👋",
+    )
+    hide_footer()
     main()
