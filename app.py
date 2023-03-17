@@ -75,8 +75,10 @@ def page_audio_transcriber():
                 "語音模型大小", 
                 ('Tiny', 'Base', 'Small', 'Medium', 'Large')
             )
-        transcriber = Transcriber(language=language, model_size=model_size)
+
         if st.button('轉譯'):
+            with st.spinner("加載模型中..."):
+                transcriber = Transcriber(language=language, model_size=model_size)
             with st.spinner(f"語音文件轉譯中..."):
                 audio_file = str(os.path.abspath(os.path.join(download_path, output_audio_file)))
                 result = transcriber(audio_file)
