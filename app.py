@@ -188,7 +188,7 @@ def page_audio_summariser():
 def main():
     page = st.sidebar.selectbox(
         "功能選單",
-        ("介紹", "YouTube下載器", '語音轉譯器', '語音摘要器 (TBD)')
+        ("介紹", "YouTube下載器", '語音轉譯器')
     )
     if page == "介紹":
         page_introduction()
