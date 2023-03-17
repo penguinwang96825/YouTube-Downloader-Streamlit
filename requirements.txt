@@ -2,5 +2,7 @@ ffmpeg-python
 openai-whisper
 pandas
 pydub
+pysbd
 streamlit
+transformers
 yt-dlp
