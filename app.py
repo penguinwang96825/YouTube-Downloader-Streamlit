@@ -92,21 +92,32 @@ def page_audio_transcriber():
                 result = transcriber(audio_file)
             # st.write(result['text'])
 
-            transcript_file = os.path.join(transcript_path, 'subtitles.srt')
-            with open(transcript_file, 'w') as f:
+            transcript_srt_file = os.path.join(transcript_path, 'subtitles.srt')
+            with open(transcript_srt_file, 'w') as f:
                 for segment in result['segments']:
                     since = timedelta(seconds=segment["start"])
                     until = timedelta(seconds=segment["end"])
-                    text = segment['text']
+                    text = segment['text'][1:]
                     msg = f'{since} --> {until} {text}\n\n'
                     f.write(msg)
-            output_file = open(os.path.join(transcript_path, 'subtitles.srt'), "r")
-            output_file_data = output_file.read()
+
+            transcript_txt_file = os.path.join(transcript_path, 'transcribe.txt')
+            with open(transcript_txt_file, 'w') as f:
+                text = result['text'][1:]
+                f.write(text)
 
             if st.download_button(
                 label='下載SRT檔', 
-                data=output_file_data, 
+                data=open(transcript_srt_file, "r").read(), 
                 file_name='subtitles.srt', 
+                mime='text/plain'
+            ):
+                st.success('下載成功！')
+
+            if st.download_button(
+                label='下載TXT檔', 
+                data=open(transcript_txt_file, "r").read(), 
+                file_name='transcribe.txt', 
                 mime='text/plain'
             ):
                 st.success('下載成功！')
